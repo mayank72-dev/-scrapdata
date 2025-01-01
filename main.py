@@ -53,20 +53,19 @@ while True:
             print(tags)
             print(count_data)
 
-            # Extract about page link the author page
+            
             about_links = quote.xpath(".//span/small[@class='author']/following-sibling::a/@href").get()
 
-            # Join the base URL with the relative URL of the author about page
+         
             about_pg_url = urljoin(base_url, about_links)
 
-            # Fetch author's page for description, birth_date, and place
             about_response = requests.get(about_pg_url)
 
             if about_response.status_code == 200:
                 select1 = Selector(text=about_response.text)
 
                 description = select1.xpath("//div[@class='author-description']//text()").get()
-                # /description = description.strip() if description else None
+                
 
                 birth_date = select1.xpath("//span[@class='author-born-date']//text()").get()
                 place = select1.xpath("//span[@class='author-born-location']//text()").get()
@@ -88,12 +87,12 @@ while True:
         conn.commit()
         print(f"Inserted {count_data} rows from page {page}")
 
-        # Check if there is a next page
+        
         next_page_link = select.xpath("//li[@class='next']/a/@href").get()
         if not next_page_link:
-            break  # No next page, exit the loop
+            break  
         page += 1
-        count_data+=1  # Move to the next page
+        count_data+=1  
 
     else:
         print(f"Failed to fetch page {page}. Status code: {response.status_code}")
